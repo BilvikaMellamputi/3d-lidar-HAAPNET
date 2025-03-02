@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D LiDAR Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <canvas id="lidarCanvas"></canvas>
+    <script>
+        // Set up Three.js scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById("lidarCanvas") });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Load LiDAR data from JSON
+        fetch("web_data/lidar_data.json")
+            .then(response => response.json())
+            .then(data => {
+                const geometry = new THREE.BufferGeometry();
+                const vertices = new Float32Array(data.points.flat());
+                geometry.setAttribute("position", new THREE.BufferAttribute(vertices, 3));
+
+                const material = new THREE.PointsMaterial({ color: 0x00ff00, size: 0.1 });
+                const pointCloud = new THREE.Points(geometry, material);
+                scene.add(pointCloud);
+
+                camera.position.z = 5;
+                function animate() {
+                    requestAnimationFrame(animate);
+                    pointCloud.rotation.y += 0.005; // Rotate for 360° effect
+                    renderer.render(scene, camera);
+                }
+                animate();
+            })
+            .catch(error => console.error("Error loading LiDAR data:", error));
+    </script>
+</body>
+</html>
