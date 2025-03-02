@@ -1,7 +1,4 @@
-# 3d-lidar-HAAPNET
 
-### **📌 Here is your `README.md` file content:**  
-Simply **copy and paste** this into your `README.md` file.
 
 # 🚀 3D LiDAR HAAP-Net  
 
